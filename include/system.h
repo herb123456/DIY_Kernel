@@ -16,6 +16,7 @@
 
 #include <core/heap.h>
 #include <core/timer.h>
+#include <core/task.h>
 
 
 #include <dev/keyboard.h>

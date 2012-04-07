@@ -1,11 +1,6 @@
 #include <system.h>
 
 void init_system_timer(){
-	/*
-	if( &timer_list != 0 )
-		return;
-	*/
-	kprintf("timer initialising \n");
 	init_list( &timer_list );
 }
 
@@ -44,11 +39,9 @@ void timer_init( timer_t *timer, const char *name, void(*timeout)(void *paramete
 }
 
 s8int timer_start( timer_t *timer ){
-	kprintf("call timer_start \n");
 	if( timer == NULL || timer->flag & ACTIVATED )
 		return ERROR;
 	
-	kprintf("call timer_start sucess \n");
 	
 	timer_t *ptimer;
 	node_t *pnode, *last_node;
@@ -63,25 +56,19 @@ s8int timer_start( timer_t *timer ){
 		last_node = &timer_list.tail;
 		
 		while( pnode != last_node || pnode == NULL ){
-			//kprintf("timer_start in while \n");
-			//kprintf("pnode %x, last_node %x \n", pnode, last_node);
 			ptimer = (timer_t *)pnode;
 			if( ptimer->timeout_tick > timer->timeout_tick ){
-				kprintf("append_list: pnode %x, last_node %x \n", pnode, last_node);
 				append_list(pnode->prev, &timer->node);
 				break;
 			}else{
-				//kprintf("pnode = pnode->next; pnode %x, last_node %x \n", pnode, last_node);
 				pnode = pnode->next;
 			}
 		}
 		
 		if( pnode == last_node ){
-			kprintf("add timer \n");
 			insert_rear(&timer_list, &timer->node);
 		}
 	}else{
-		kprintf("add timer \n");
 		insert_rear(&timer_list, &timer->node);
 	}
 	
@@ -142,17 +129,13 @@ s8int timer_control( timer_t *timer, TIMER_CMD_TYPE cmd, u32int arg ){
 }
 
 void timer_check(){
-	//kprintf("call timer_check \n");
 	timer_t *ptimer;
 	node_t *pnode;
 	u32int current_tick = get_tick();
 	
 	disableInterrupt();
-	//kprintf("timer_check disableInterrupt \n");
 	if( !is_Empty(&timer_list) ){
-		//kprintf("call timer_check success \n");
 		pnode = first_node(&timer_list);
-		//u32int count = 0;
 		while( pnode != &timer_list.tail ){
 			ptimer = (timer_t *)pnode;
 			if( current_tick >= ptimer->timeout_tick ){
@@ -160,12 +143,10 @@ void timer_check(){
 				ptimer->timeout_func(ptimer->parameter);
 				
 				if( (ptimer->flag & PERIODIC) && (ptimer->flag & ACTIVATED) ){
-					//kprintf("(ptimer->flag & PERIODIC) && (ptimer->flag & ACTIVATED) \n");
 					ptimer->flag &= ~ACTIVATED;
 					print_list(&timer_list);
 					timer_start(ptimer);
 				}else{
-					//kprintf("ptimer->flag &= ~ACTIVATED; \n");
 					ptimer->flag &= ~ACTIVATED;
 				}
 				
@@ -175,14 +156,11 @@ void timer_check(){
 				//kprintf("while break \n");
 				break;
 			}
-			//count++;
 			
 		}
-		//kprintf("while time: %d \n ", count);
 	}
 	
 	enableInterrupt();
-	//kprintf("timer_check enableInterrupt \n");
 }
 
 

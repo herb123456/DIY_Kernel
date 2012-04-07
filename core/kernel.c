@@ -3,6 +3,7 @@
 extern u32int end;
 u32int end_address = (u32int)&end;
 
+
 int kernelStart(struct multiboot_info *mboot_ptr){
 	 
     

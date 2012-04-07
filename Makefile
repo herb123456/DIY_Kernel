@@ -25,6 +25,8 @@ COBJS =  	hw/isr.o \
 			lib/list.o	\
 			core/heap.o	\
 			core/timer.o	\
+			core/task.o	\
+			core/stack.o	\
 			core/kernel.o \
 			dev/keyboard.o 	\
 			apps/timer_test.o
